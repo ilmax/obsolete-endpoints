@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Diagnostics;
 
@@ -10,7 +11,7 @@ public class ObsoleteActionFilter : IAsyncActionFilter
         var obsoleteAttribute = context.ActionDescriptor.EndpointMetadata.OfType<ObsoleteAttribute>().FirstOrDefault();
         if (obsoleteAttribute is not null)
         {
-            using var activity = DiagnosticConfig.Source.StartActivity(DiagnosticNames.ObsoleteEndpointInvocation);
+            var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
             activity.EnrichWithActionContext(context);
             DiagnosticConfig.ObsoleteEndpointCounter.Add(1, new KeyValuePair<string, object?>(DiagnosticNames.DisplayName, context.ActionDescriptor.DisplayName));
             await next();

@@ -11,11 +11,13 @@ public static class ActivityExtensions
     {
         activity?.SetTag(DiagnosticNames.Url, httpContext.Request.GetDisplayUrl());
         activity?.SetTag(DiagnosticNames.DisplayName, endpoint.DisplayName);
+        activity?.SetTag(DiagnosticNames.ObsoleteEndpoint, true);
     }
     
     public static void EnrichWithActionContext(this Activity? activity, ActionExecutingContext context)
     {
         activity?.SetTag(DiagnosticNames.Url, context.HttpContext.Request.GetDisplayUrl());
         activity?.SetTag(DiagnosticNames.DisplayName, context.ActionDescriptor.DisplayName);
+        activity?.SetTag(DiagnosticNames.ObsoleteEndpoint, true);
     }
 }
